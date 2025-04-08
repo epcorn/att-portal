@@ -65,6 +65,7 @@ const getInitialQuoteState = () => {
     paymentTerms: "",
   };
 };
+
 // eslint-disable-next-line react/prop-types
 function NewQuote({ onClose }) {
   const { loading } = useSelector((state) => state.quote);
@@ -80,6 +81,7 @@ function NewQuote({ onClose }) {
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
   // Load data from local storage on component mount
+
   useEffect(() => {
     const savedData = localStorage.getItem("newQuote");
     if (savedData) {
@@ -87,6 +89,7 @@ function NewQuote({ onClose }) {
       setQuote(quote);
     }
   }, []);
+
   useEffect(() => {
     async function fetchGroups() {
       const actionResult = await dispatch(getGroups());
@@ -95,6 +98,7 @@ function NewQuote({ onClose }) {
     }
     fetchGroups();
   }, [dispatch]);
+
   useEffect(() => {
     async function fetchGroups() {
       const actionResult = await dispatch(getGroup(selectedGroup));
@@ -107,10 +111,12 @@ function NewQuote({ onClose }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedGroup]);
+
   // Save data to local storage whenever quote or infoArray changes
   useEffect(() => {
     localStorage.setItem("newQuote", JSON.stringify({ quote }));
   }, [quote, selectedGroup]);
+
   useEffect(() => {
     if (quote.quoteInfo.length <= 0) {
       setDisableRadio(false);
@@ -120,6 +126,7 @@ function NewQuote({ onClose }) {
       setQuote((prev) => ({ ...prev, docType: doc }));
     }
   }, [doc, quote?.quoteInfo.length]);
+
   useEffect(() => {
     setQuote((prev) => ({ ...prev, paymentTerms: subPaymentTerm }));
   }, [subPaymentTerm]);

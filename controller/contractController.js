@@ -405,6 +405,7 @@ const approve = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
+    console.log(error);
   }
 };
 const createWarrenty = async (req, res, next) => {

@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const counterSchema = new mongoose.Schema({
   _id: { type: String, default: "quotationCounter" },
   seq: { type: Number, default: 2 },
+  financialYear: { type: String, default: "2025-26" },
 });
 
 const chemicalAndBatch = new mongoose.Schema({

@@ -184,56 +184,85 @@ quotationSchema.methods.approve = async function () {
 quotationSchema.methods.reviseQuotationNo = async function () {
   if (!this.approved) {
     return;
-  } else {
-    const currentQuotationNo = this.quotationNo;
-    // Process the existing quotationNo
-    const parts = currentQuotationNo.split("/");
-    let newQuotationNo;
-    if (parts.length === 5 && parts[4].startsWith("R")) {
-      // If already revised, increment the revision number
-      const revisionNumber = parseInt(parts[4].substring(1)) + 1;
-      parts[4] = `R${revisionNumber}`;
-      newQuotationNo = parts.join("/");
-    } else if (parts.length === 4) {
-      // If first revision, add /R1
-      newQuotationNo = `${currentQuotationNo}/R1`;
-    } else {
-      // Unexpected format, just append /R1
-      newQuotationNo = `${currentQuotationNo}/R1`;
-    }
-    this.quotationNo = newQuotationNo;
-    return this.save();
   }
+
+  const currentQuotationNo = this.quotationNo;
+  const parts = currentQuotationNo.split("/");
+
+  let newQuotationNo;
+
+  if (parts.length === 6 && parts[5].startsWith("R")) {
+    // If already revised, increment the revision number
+    const revisionNumber = parseInt(parts[5].substring(1)) + 1;
+    parts[5] = `R${revisionNumber}`;
+    newQuotationNo = parts.join("/");
+  } else if (parts.length === 5) {
+    // If first revision, add /R1
+    newQuotationNo = `${currentQuotationNo}/R1`;
+  } else {
+    // Unexpected format, just append /R1
+    newQuotationNo = `${currentQuotationNo}/R1`;
+  }
+
+  this.quotationNo = newQuotationNo;
+  return this.save();
 };
+
 quotationSchema.statics.isApproved = async function (id) {
   const doc = await this.findById(id, "approved");
   return doc ? doc.approved : false;
 };
+
 quotationSchema.statics.generateQuotationNo = async function () {
   try {
-    // Check if the counter document exists
+    // Get current date and determine financial year
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth() + 1; // Months are 0-based
+
+    let startYear, endYear;
+    if (currentMonth >= 4) {
+      startYear = currentYear;
+      endYear = currentYear + 1;
+    } else {
+      startYear = currentYear - 1;
+      endYear = currentYear;
+    }
+    const financialYear = `${startYear}-${endYear.toString().slice(-2)}`;
+
+    // Fetch the counter document
     let counter = await Counter.findById("quotationCounter");
 
-    // If the counter document does not exist, create it with the default value
     if (!counter) {
-      counter = await new Counter({ _id: "quotationCounter", seq: 1 }).save();
+      // If counter doesn't exist, create it with seq = 2
+      counter = await new Counter({
+        _id: "quotationCounter",
+        seq: 2, // Start from 2 as per requirement
+        financialYear: financialYear,
+      }).save();
+    } else if (counter.financialYear !== financialYear) {
+      // Reset counter if financial year has changed
+      counter.seq = 2; // Start from 2
+      counter.financialYear = financialYear;
+      await counter.save();
+    } else {
+      // Increment the sequence if financial year is the same
+      counter = await Counter.findByIdAndUpdate(
+        "quotationCounter",
+        { $inc: { seq: 1 } },
+        { new: true }
+      );
     }
 
-    // Increment the counter and get the new sequence number
-    counter = await Counter.findByIdAndUpdate(
-      "quotationCounter",
-      { $inc: { seq: 1 } },
-      { new: true }
-    );
+    // Generate new quotation number
+    const newQuoteNo = `EPPL/ATT/QTN/${financialYear}/${counter.seq}`;
 
-    // Generate the new quotation number using the counter
-    const newQuoteNo = `EPPL/ATT/QTN/${counter.seq}`;
-    // Optionally, you can add a check to ensure the generated number is unique
+    // Ensure uniqueness (rare case)
     const existingQuote = await this.findOne({ quotationNo: newQuoteNo });
     if (existingQuote) {
-      // If by any chance the number already exists, recursively try again
       return this.generateQuotationNo();
     }
+
     return newQuoteNo;
   } catch (error) {
     console.error("Error generating quotation number:", error);

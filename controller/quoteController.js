@@ -226,7 +226,6 @@ const update = async (req, res, next) => {
     // Save the updated quotation
     await quotation.save();
 
-    // Update or create quoteInfo documents
     const updatedQuoteInfoIds = [];
     for (const info of quoteInfo) {
       let quoteInfoDoc;
@@ -268,7 +267,13 @@ const update = async (req, res, next) => {
     // Update the quotation with the new quoteInfo ids
     quotation.quoteInfo = updatedQuoteInfoIds;
     await quotation.save();
-    await quotation.reviseQuotationNo();
+    function isNewQuotationNoFormat(quotationNo) {
+      const pattern = /^EPPL\/ATT\/QTN\/\d{4}-\d{2}\/\d+$/; // Matches "EPPL/ATT/QTN/YYYY-YY/N"
+      return pattern.test(quotationNo);
+    }
+    if (isNewQuotationNoFormat(quotation.quotationNo)) {
+      await quotation.reviseQuotationNo();
+    }
 
     // Fetch the updated quotation with populated quoteInfo
     const finalQuotation = await Quotation.findById(quotationId)
@@ -311,6 +316,7 @@ const approving = async (req, res, next) => {
       res.status(404).json({ message: "Quotation Already approved" });
       return;
     }
+
     const author = req.user.id;
     await createQuoteArchiveEntry(id, data, author, "Approved");
     const finalData = await Quotation.findById(id)

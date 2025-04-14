@@ -171,54 +171,31 @@ contractSchema.methods.approve = async function () {
 };
 contractSchema.methods.generateContractNo = async function () {
   try {
-    // Get current date and determine financial year
-    const currentDate = new Date();
-    const currentYear = currentDate.getFullYear();
-    const currentMonth = currentDate.getMonth() + 1; // Months are 0-based
-
-    let startYear, endYear;
-    if (currentMonth >= 4) {
-      startYear = currentYear;
-      endYear = currentYear + 1;
-    } else {
-      startYear = currentYear - 1;
-      endYear = currentYear;
-    }
-    const financialYear = `${startYear}-${endYear.toString().slice(-2)}`;
-
-    // Find the counter document for contract numbers
     let counter = await Counter.findById("contractCounter");
 
-    // If the counter document does not exist, create it
     if (!counter) {
-      // If counter doesn't exist, create it with seq = 2
-      counter = await new Counter({
-        _id: "contractCounter",
-        seq: 2,
-        financialYear: financialYear,
-      }).save();
-    } else if (counter.financialYear !== financialYear) {
-      counter.seq = 2;
-      counter.financialYear = financialYear;
-      await counter.save();
-    } else {
-      counter = await Counter.findByIdAndUpdate(
-        "quotationCounter",
-        { $inc: { seq: 1 } },
-        { new: true }
-      );
+      counter = await new Counter({ _id: "contractCounter", seq: 1 }).save();
     }
 
+    counter = await Counter.findByIdAndUpdate(
+      "contractCounter",
+      { $inc: { seq: 1 } },
+      { new: true }
+    );
+
+    // Get the current year
+    const currentYear = new Date().getFullYear();
     let newContractNo = "";
     if (this.os) {
-      newContractNo = `OS/PRE/${financialYear}/${counter.seq}`;
+      newContractNo = `OS/PRE/${counter.seq}/${currentYear}`;
     } else {
-      newContractNo = `PRE/${financialYear}/${counter.seq}`;
+      newContractNo = `PRE/${counter.seq}/${currentYear}`;
     }
     // Set the generated contract number on the current document
     this.contractNo = newContractNo;
     return this.save();
   } catch (error) {
+    // Log the error and rethrow it
     console.error("Error generating contract number:", error);
     throw error;
   }

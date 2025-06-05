@@ -785,8 +785,8 @@ function NewQuote({ onClose }) {
                 >
                   <option></option>
                   <option>Your enquiry & our discussion had with ____</option>
-                  <option>Your email enquiry Dated **/**/**</option>
-                  <option>Your email enquiry from _____ Dated **/**/**</option>
+                  <option>Your email Dated **/**/**</option>
+                  <option>Your email from _____ Dated **/**/**</option>
                   <option>Your enquiry & our discussion had with </option>
                 </Select>
               </Label>

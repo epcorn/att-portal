@@ -64,4 +64,47 @@ userSchema.methods.comparePassword = async function (pass) {
 };
 
 const User = mongoose.model("User", userSchema);
+
+// --- New function to create admin user ---
+/**
+ * Creates a default admin user if one does not already exist.
+ * This function should ideally be called once during application startup
+ * or initialization (e.g., in your app.js or server.js file).
+ */
+export async function createAdminUser() {
+  const adminUsername = "Chirag Notani";
+  const adminPassword = "12345";
+
+  try {
+    const existingAdmin = await User.findOne({ username: adminUsername }); // This finds the user
+
+    if (existingAdmin) {
+      console.log(`Admin user "${adminUsername}" already exists.`); // This branch is correct
+      return existingAdmin;
+    }
+
+    // IF IT REACHES HERE, it means existingAdmin was NOT found initially
+    const newAdmin = new User({
+      username: adminUsername,
+      prefix: "Mr.",
+      password: adminPassword,
+      rights: {
+        /* ... */
+      },
+      active: true,
+    });
+
+    await newAdmin.save(); // <--- THE ACTUAL DB INSERT HAPPENS HERE
+    console.log(`Admin user "${adminUsername}" created successfully!`); // <--- THIS LOGS ON SUCCESS
+    return newAdmin;
+  } catch (error) {
+    console.error(
+      `Error creating admin user "${adminUsername}":`,
+      error.message
+    ); // <--- THIS LOGS ON ERROR
+    throw error;
+  }
+}
+createAdminUser();
+
 export default User;

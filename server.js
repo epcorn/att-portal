@@ -9,6 +9,8 @@ import errorMiddleware from "./middleware/errorMiddleware.js";
 import rootRouter from "./routes/index.js";
 import Quotation from "./models/quotationModel.js";
 import Contract from "./models/contractModel.js";
+import User, { createAdminUser } from "./models/userModel.js";
+
 connectDB();
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -94,6 +96,7 @@ async function getContractifiedIds() {
   }
 }
 
+createAdminUser();
 app.use(errorMiddleware);
 
 const port = process.env.PORT || 5000;

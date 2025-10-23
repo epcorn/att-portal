@@ -394,7 +394,14 @@ function NewQuote({ onClose }) {
             <Select
               name="groupBy"
               value={quote.groupBy}
-              onChange={(e) => [setSelectedGroup(e.target.value)]}
+              onChange={(e) => {
+                const val = e.target.value;
+                setSelectedGroup(val);
+                if (val === "") {
+                  // Reset all fields to initial state
+                  setQuote(initialState);
+                }
+              }}
               className={`${
                 error === "groupBy"
                   ? "border border-red-500 rounded-lg bg-red-300 "

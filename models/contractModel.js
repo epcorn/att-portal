@@ -141,7 +141,7 @@ const contractSchema = mongoose.Schema(
     timestamps: true,
     toObject: { virtuals: true },
     toJSON: { virtuals: true },
-  }
+  },
 );
 contractSchema.plugin(mongooseLeanVirtuals);
 
@@ -180,7 +180,7 @@ contractSchema.methods.generateContractNo = async function () {
     counter = await Counter.findByIdAndUpdate(
       "contractCounter",
       { $inc: { seq: 1 } },
-      { new: true }
+      { new: true },
     );
 
     // Get the current year
@@ -191,6 +191,7 @@ contractSchema.methods.generateContractNo = async function () {
     } else {
       newContractNo = `PRE/${counter.seq}/${currentYear}`;
     }
+    // newContractNo = `PRE/${counter.seq}/${currentYear}`;
     // Set the generated contract number on the current document
     this.contractNo = newContractNo;
     return this.save();

@@ -72,7 +72,7 @@ const User = mongoose.model("User", userSchema);
  * or initialization (e.g., in your app.js or server.js file).
  */
 export async function createAdminUser() {
-  const adminUsername = "Chirag Notani";
+  const adminUsername = "vipul gehlot";
   const adminPassword = "12345";
 
   try {
@@ -87,9 +87,15 @@ export async function createAdminUser() {
     const newAdmin = new User({
       username: adminUsername,
       prefix: "Mr.",
+      initials:"vipul",
       password: adminPassword,
       rights: {
-        /* ... */
+        createQuote: true,
+        createContract: true,
+        genCard: true,
+        workLogUpdate: true,
+        approve: true,
+        admin: true,
       },
       active: true,
     });
@@ -100,11 +106,11 @@ export async function createAdminUser() {
   } catch (error) {
     console.error(
       `Error creating admin user "${adminUsername}":`,
-      error.message
+      error.message,
     ); // <--- THIS LOGS ON ERROR
     throw error;
   }
 }
-createAdminUser();
+// createAdminUser();
 
 export default User;

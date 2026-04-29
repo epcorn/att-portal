@@ -96,7 +96,7 @@ async function getContractifiedIds() {
   }
 }
 
-createAdminUser();
+// createAdminUser();
 app.use(errorMiddleware);
 
 const port = process.env.PORT || 5000;

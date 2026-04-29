@@ -24,6 +24,7 @@ import {
 } from "../index.js";
 import { getGroup, getGroups } from "../../redux/quote/quoteSlice.js";
 
+
 const getInitialContractState = () => {
   const savedData = localStorage.getItem("newContract");
   if (savedData) {
@@ -217,10 +218,10 @@ function NewContract({ onClose }) {
       toast.error("Please select salesPerson!");
       return;
     }
-    if (contract.quoteInfo.length <= 0) {
-      toast.error("Please fill the number details.");
-      return;
-    }
+    // if (contract.quoteInfo.length <= 0) {
+    //   toast.error("Please fill the number details.");
+    //   return;
+    // }
 
     const data = { contract };
     const actionResult = await dispatch(createContract(data));

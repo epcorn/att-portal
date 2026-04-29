@@ -4,9 +4,9 @@ import Refresh from "./Refresh";
 const PageHeader = ({ bgColor, recentTitle, nextNumber, buttons }) => {
   return (
     <div
-      className={`h-16 text-lg flex items-center justify-between font-medium border border-black rounded-tl-lg rounded-br-lg ${bgColor}`}
+      className={`h-16 text-lg flex items-center justify-between font-medium px-2 rounded-t-lg ${bgColor}`}
     >
-      <div className="m-2">
+      <div className="m-2 active:animate-spin">
         <Refresh />
       </div>
 

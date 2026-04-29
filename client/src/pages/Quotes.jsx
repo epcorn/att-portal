@@ -250,13 +250,13 @@ export default function Create() {
             buttons={
               <>
                 <button
-                  className="bg-[#FFFDB5] hover:bg-yellow-200 font-medium py-2 px-4 rounded"
+                  className="bg-yellow-300 hover:bg-yellow-200 font-medium py-2 px-4 rounded-2xl transition-all"
                   onClick={() => setGroupModal(true)}
                 >
                   Create Group
                 </button>
                 <button
-                  className="bg-[#FFFDB5] hover:bg-yellow-200 font-medium py-2 px-4 rounded-tl-lg rounded-br-lg"
+                  className="bg-yellow-300 hover:bg-yellow-200 font-medium py-2 px-4 rounded-2xl transition-all"
                   onClick={() => setCreateModel(true)}
                 >
                   Create Quotation

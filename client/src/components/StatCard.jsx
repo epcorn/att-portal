@@ -5,33 +5,35 @@ const StatCard = ({ title, value, icon, color, icons }) => {
   const [hoveredIcon, setHoveredIcon] = useState(null);
 
   return (
-    <div className={`bg-white p-6 rounded-lg shadow-md border-l-4 ${color}`}>
+    <div className={`bg-white px-6 py-3 rounded-lg shadow-md border-l-4 ${color}`}>
       <div className="flex items-center justify-between relative">
         {/* Title & Value */}
-        <div>
+        <div className="w-full flex flex-col justify-between h-full gap-3 ">
           <h2 className="text-xl font-semibold mb-2">{title}</h2>
-          <p
-            className={`text-3xl font-bold ${color.replace(
-              "border-",
-              "text-"
-            )}`}
-          >
-            {value ?? 0}
-          </p>
+          <div className="flex items-center justify-between">
+            <p
+              className={`text-3xl font-bold ${color.replace(
+                "border-",
+                "text-"
+              )}`}
+            >
+              {value ?? 0}
+            </p>
+            {/* Main Icon */}
+            <div className={`text-4xl ${color.replace("border-", "text-")}`}>
+              {icon}
+            </div>
+          </div>
         </div>
 
-        {/* Main Icon */}
-        <div className={`text-4xl ${color.replace("border-", "text-")}`}>
-          {icon}
-        </div>
 
         {/* Conditional Icons Section */}
         {icons.length > 0 && (
-          <div className="mt-2 absolute flex bottom-0 right-0 space-x-1">
+          <div className="mt-2 absolute flex bottom-0 right-1/2 translate-x-1/2 space-x-1">
             {icons.map((item) => (
               <div
                 key={item.id}
-                className="relative text-sm cursor-pointer "
+                className="relative text-sm cursor-pointer"
                 onMouseEnter={(e) =>
                   setHoveredIcon({ text: item.text, position: e.target })
                 }

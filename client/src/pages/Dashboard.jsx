@@ -178,13 +178,13 @@ export default function Dashboard() {
     <div className="mx-3 min-h-screen p-4 bg-gray-100">
       <h1 className="text-3xl font-bold mb-6 text-center">Dashboard</h1>
       {/* Quotations Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 mb-8">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-4 mb-8">
         {stats.map((stat) => (
           <StatCard key={stat.title} {...stat} />
         ))}
       </div>
       {/* Contracts Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-4 mb-8">
         {contractStats.map((stat) => (
           <StatCard key={stat.title} {...stat} />
         ))}

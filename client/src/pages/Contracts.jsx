@@ -135,7 +135,7 @@ function Contracts() {
   //   toast.success(result.message);
   // }
   return (
-    <div className="mx-3 ">
+    <div className="mx-3">
       {loading ? <Loading /> : null}
       <div className="h-full mt-3">
         <div className=" mt-2 h-full">
@@ -145,7 +145,7 @@ function Contracts() {
             nextNumber={{ label: "Next Contract No", value: nextContractNo }}
             buttons={
               <button
-                className="bg-[#FFFDB5] hover:bg-yellow-200 font-medium py-2 px-4 rounded-tl-lg rounded-br-lg"
+                className="bg-[#FFFDB5] hover:bg-yellow-200 font-medium py-2 px-4 rounded-2xl"
                 onClick={() => setCreateModel(true)}
               >
                 Create Contracts

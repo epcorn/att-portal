@@ -169,35 +169,51 @@ contractSchema.methods.approve = async function () {
   this.contractDate = new Date();
   return this.save();
 };
+
+//added contract auto updated on every year change
 contractSchema.methods.generateContractNo = async function () {
   try {
-    let counter = await Counter.findById("contractCounter");
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth() + 1;
 
-    if (!counter) {
-      counter = await new Counter({ _id: "contractCounter", seq: 1 }).save();
-    }
+    // Logic: If April or later, startYear is this year. Else, it's last year.
+    let startYear = currentMonth >= 4 ? currentYear : currentYear - 1;
+    const financialYear = `${startYear}-${(startYear + 1).toString().slice(-2)}`;
 
-    counter = await Counter.findByIdAndUpdate(
-      "contractCounter",
-      { $inc: { seq: 1 } },
-      { new: true },
-    );
+    // 1. CRITICAL: Use 'contractCounter' so it doesn't clash with quotes
+    let counter = await mongoose.model("Counter").findById("contractCounter");
 
-    // Get the current year
-    const currentYear = new Date().getFullYear();
-    let newContractNo = "";
-    if (this.os) {
-      newContractNo = `OS/PRE/${counter.seq}/${currentYear}`;
+    // 2. Check if we need to reset for the new year (2026-27)
+    if (!counter || counter.financialYear !== financialYear) {
+      counter = await mongoose
+        .model("Counter")
+        .findOneAndUpdate(
+          { _id: "contractCounter" },
+          { seq: 2, financialYear: financialYear },
+          { new: true, upsert: true },
+        );
     } else {
-      newContractNo = `PRE/${counter.seq}/${currentYear}`;
+      counter = await mongoose
+        .model("Counter")
+        .findByIdAndUpdate(
+          "contractCounter",
+          { $inc: { seq: 1 } },
+          { new: true },
+        );
     }
-    // newContractNo = `PRE/${counter.seq}/${currentYear}`;
-    // Set the generated contract number on the current document
-    this.contractNo = newContractNo;
+
+    const padding = counter.seq.toString().padStart(2, "0");
+
+    // 3. Use the financialYear variable here, NOT currentYear
+    this.contractNo = this.os
+      ? `OSPRE/${padding}/${financialYear}`
+      : `PRE/${padding}/${financialYear}`;
+
+    console.log("Generated No:", this.contractNo, "\ncontractmodel-->ln 207"); // Should show 2026-27
     return this.save();
   } catch (error) {
-    // Log the error and rethrow it
-    console.error("Error generating contract number:", error);
+    console.error("Error:", error);
     throw error;
   }
 };

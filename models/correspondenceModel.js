@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 const fileSchema = new mongoose.Schema(
   {
     url: {
-      type: String,
+      type: String, 
       required: [true, "Cloudinary URL is required"],
       match: [/^https?:\/\/(.*?)\.cloudinary\.com\//, "Invalid Cloudinary URL"],
     },

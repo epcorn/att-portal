@@ -26,7 +26,7 @@ const create = async (req, res, next) => {
   try {
     const { contract } = req.body;
     const {
-      // contractNo,  // removed for pre/--/-- format
+      contractNo,
       os,
       contractDate,
       salesPerson,
@@ -51,7 +51,7 @@ const create = async (req, res, next) => {
       quoteInfoIds.push(newInfo._id);
     }
     const newContract = await Contract.create({
-      // contractNo,  // removed for pre/--/-- format
+      contractNo,
       os,
       contractDate: contractDate || Date.now(),
       salesPerson,
@@ -68,9 +68,6 @@ const create = async (req, res, next) => {
       quoteInfo: quoteInfoIds,
       createdBy: req.user.id,
     });
-
-    //generate contract number
-    await newContract.generateContractNo();  // added for pre/--/-- format
 
     const populatedContract = await newContract.populate(
       "createdBy",

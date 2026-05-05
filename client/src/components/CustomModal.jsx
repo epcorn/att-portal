@@ -1,19 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Modal } from "flowbite-react";
-import { useEffect } from "react";
 
 const CustomModal = ({ isOpen, onClose, children, heading, size, bg }) => {
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [isOpen]);
 
   return (
     <>

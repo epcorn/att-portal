@@ -179,7 +179,7 @@ contractSchema.methods.generateContractNo = async function () {
 
     // Logic: If April or later, startYear is this year. Else, it's last year.
     let startYear = currentMonth >= 4 ? currentYear : currentYear - 1;
-    const financialYear = startYear;  // like 2026 not 2026-27
+    const financialYear = `${startYear}-${Number(startYear.toString().slice(2)) + 1}`; // like 2026 not 2026-27
 
     // 1. CRITICAL: Use 'contractCounter' so it doesn't clash with quotes
     let counter = await mongoose.model("Counter").findById("contractCounter");
@@ -207,8 +207,8 @@ contractSchema.methods.generateContractNo = async function () {
 
     // 3. Use the financialYear variable here, NOT currentYear
     this.contractNo = this.os
-      ? `OSPRE/${padding}/${financialYear}`
-      : `PRE/${padding}/${financialYear}`;
+      ? `OSPRE/${padding}/${startYear}`
+      : `PRE/${padding}/${startYear}`;
 
     console.log("Generated No:", this.contractNo, "\ncontractmodel-->ln 207"); // Should show 2026-27
     return this.save();

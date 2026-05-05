@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 
@@ -27,7 +28,7 @@ export const login = createAsyncThunk(
       console.log(error);
       return rejectWithValue(error.response.data);
     }
-  }
+  },
 );
 export const logout = createAsyncThunk(
   "logout",
@@ -47,7 +48,7 @@ export const logout = createAsyncThunk(
       console.log(error);
       return rejectWithValue(error.response.data);
     }
-  }
+  },
 );
 export const register = createAsyncThunk(
   "register/user",
@@ -68,7 +69,7 @@ export const register = createAsyncThunk(
       console.log(error);
       return rejectWithValue(error.response.data);
     }
-  }
+  },
 );
 export const updateUser = createAsyncThunk(
   "update/user",
@@ -89,7 +90,7 @@ export const updateUser = createAsyncThunk(
       console.log(error);
       return rejectWithValue(error.response.data);
     }
-  }
+  },
 );
 export const getUsers = createAsyncThunk(
   "get/users",
@@ -106,7 +107,7 @@ export const getUsers = createAsyncThunk(
       console.log(error);
       return rejectWithValue(error.response.data);
     }
-  }
+  },
 );
 export const deleteUser = createAsyncThunk(
   "delete/user",
@@ -125,7 +126,7 @@ export const deleteUser = createAsyncThunk(
       console.log(error);
       return rejectWithValue(error.response.data);
     }
-  }
+  },
 );
 
 export const getInitials = createAsyncThunk(
@@ -145,7 +146,7 @@ export const getInitials = createAsyncThunk(
       console.log(error);
       return rejectWithValue(error.response.data);
     }
-  }
+  },
 );
 export const getNextNum = createAsyncThunk(
   "get/nextNum",
@@ -164,7 +165,7 @@ export const getNextNum = createAsyncThunk(
       console.log(error);
       return rejectWithValue(error.response.data);
     }
-  }
+  },
 );
 
 export const userSlice = createSlice({
@@ -227,11 +228,11 @@ export const userSlice = createSlice({
       .addCase(updateUser.fulfilled, (state, { payload }) => {
         state.loading = false;
         state.allUsers = state.allUsers.filter(
-          (user) => user._id !== payload.result._id
+          (user) => user._id !== payload.result._id,
         );
         state.allUsers.push(payload.result);
         state.allUsers = state.allUsers.sort((a, b) =>
-          a.username.localeCompare(b.username)
+          a.username.localeCompare(b.username),
         );
         toast.success(payload.message);
       })
@@ -245,10 +246,10 @@ export const userSlice = createSlice({
       .addCase(deleteUser.fulfilled, (state, { payload }) => {
         state.loading = false;
         state.allUsers = state.allUsers.filter(
-          (user) => user._id !== payload.result
+          (user) => user._id !== payload.result,
         );
         state.allUsers = state.allUsers.sort((a, b) =>
-          a.username.localeCompare(b.username)
+          a.username.localeCompare(b.username),
         );
         toast.success(payload.message);
       })
@@ -267,9 +268,12 @@ export const userSlice = createSlice({
       .addCase(getInitials.pending, (state) => {
         state.loading = true;
       })
-      .addCase(getInitials.rejected, (state, action) => {
+      .addCase(getInitials.rejected, (state) => {
         state.loading = false;
         toast.error(action.payload.message, { autoClose: 1000 });
+      })
+      .addCase(getNextNum.fulfilled, (state, action) => {
+        state.nextNum = action.payload.result || 1;
       });
   },
 });

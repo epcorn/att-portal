@@ -162,7 +162,7 @@ function NewContract({ onClose }) {
           a5: "Opposite Hell",
           city: "Mumbai",
           pincode: "400030",
-          kci: [],
+          kci: [{name:"KEC",contact:"9090909090",email:"kec@int.com"}],
         },
         shipToAddress: {
           projectName: "Prestige City Rehab Project",
@@ -173,7 +173,7 @@ function NewContract({ onClose }) {
           a5: "Opposite Hell",
           city: "Mumbai",
           pincode: "400030",
-          kci: [],
+          kci: [{name:"KEC",contact:"9090909090",email:"kec@int.com"}],
         },
         kindAttentionPrefix: "Mr.",
         kindAttention: "Malahari Naik",
